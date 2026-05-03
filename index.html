@@ -31,38 +31,24 @@
     }
     .screen-active { display: block; }
 
-    /* Card Overlap & Zebra Logic */
     .workout-card {
         transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
-        margin-bottom: -180px; /* Tighter overlap for that "stacked deck" look */
+        margin-bottom: -150px; /* Adjust this to show more/less of the 'peek' */
         cursor: pointer;
         position: relative;
-        /* Matches the border radius in IMG_3392.PNG */
         border-radius: 50px; 
-    }
-    
-    #past-workouts-container {
-        /* This is crucial: it creates the empty space seen in your screenshot */
-        padding-bottom: 300px; 
-    }
-    
-    /* Alternate colors from your screenshot */
-    .workout-card:nth-child(even) {
-        background-color: #dbdee9; 
-    }
-    .workout-card:nth-child(odd) {
-        background-color: #f1f3f9;
+        border: 1px solid rgba(0,0,0,0.05); /* Slight definition between cards */
     }
 
     .workout-card.expanded {
         margin-bottom: 20px;
         margin-top: 10px;
         transform: scale(1.02);
-        z-index: 100 !important;
+        z-index: 1000 !important; /* Jump to the very front when clicked */
         box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         background-color: #ffffff !important;
     }
-
+      
     input, textarea {
         background: transparent;
         border: none;
@@ -543,18 +529,21 @@
         }
     }
 
-   function renderHistory() {
+  function renderHistory() {
         const container = document.getElementById("past-workouts-container");
         container.innerHTML = "";
         
-        // If no history, don't render anything
         if (history.length === 0) return;
 
         history.forEach((workout, index) => {
             const card = document.createElement("div");
             
-            // This ensures the first card is at the highest Z-index layer
-            card.style.zIndex = history.length - index; 
+            // INVERTED LOGIC: 
+            // The newest workout (index 0) gets z-index 0.
+            // The oldest workout (last index) gets the highest z-index.
+            // This makes the oldest card sit "on top" of the stack.
+            card.style.zIndex = index; 
+            
             card.className = "workout-card text-panda-charcoal p-10 shadow-2xl";
             
             let exHtml = workout.exercises.map(ex => `
@@ -572,22 +561,22 @@
                 </div>`;
             
             card.onclick = (e) => {
-                // Prevent toggle if clicking the Edit button
                 if (e.target.tagName === 'BUTTON') return;
                 
                 const isExpanded = card.classList.contains("expanded");
                 
-                // Collapse all
+                // Reset all cards
                 document.querySelectorAll(".workout-card").forEach((c, idx) => {
                     c.classList.remove("expanded");
                     c.querySelector(".exercise-summary").classList.add("hidden");
-                    c.style.zIndex = history.length - idx; 
+                    // Reset to the "peeking" z-index
+                    c.style.zIndex = idx; 
                 });
 
                 if (!isExpanded) {
                     card.classList.add("expanded");
                     card.querySelector(".exercise-summary").classList.remove("hidden");
-                    card.style.zIndex = 999; // Bring to absolute front
+                    card.style.zIndex = 1000; // Bring specific card to front
                 }
             };
             container.appendChild(card);
