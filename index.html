@@ -385,221 +385,194 @@
       </div>
     </div>
 
-    <script>
-      let history = [];
-      let currentSession = null;
-      let editingExerciseIndex = null;
+  <script>
+    let history = [];
+    let currentSession = null;
+    let editingExerciseIndex = null;
 
-      // --- PASTE YOUR URL HERE ---
-      const SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbxGwx0Hh5vxjWBCKg3xuKqmcL0qJx3KyxcGJn3LwL4kybiQxXncQtFzH4iKHppvmOWl-w/exec";
+    // --- YOUR SETTINGS ---
+    const SCRIPT_URL = "YOUR_DEPLOYED_URL_HERE"; 
 
-      function nav(screenId) {
-        document
-          .querySelectorAll(".screen")
-          .forEach((s) => s.classList.remove("screen-active"));
-        document
-          .getElementById("screen-" + screenId)
-          .classList.add("screen-active");
+    function nav(screenId) {
+        document.querySelectorAll(".screen").forEach((s) => s.classList.remove("screen-active"));
+        document.getElementById("screen-" + screenId).classList.add("screen-active");
         window.scrollTo(0, 0);
-      }
+    }
 
-      function updateDates() {
+    function updateDates() {
         const now = new Date();
-        const months = [
-          "january",
-          "february",
-          "march",
-          "april",
-          "may",
-          "june",
-          "july",
-          "august",
-          "september",
-          "october",
-          "november",
-          "december",
-        ];
+        const months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
         document.getElementById("dash-day").innerText = now.getDate();
-        document.getElementById("dash-month").innerText = months[
-          now.getMonth()
-        ].substring(0, 3);
+        document.getElementById("dash-month").innerText = months[now.getMonth()].substring(0, 3);
         const dateStr = `${now.getDate()} ${months[now.getMonth()]}`;
         document.getElementById("workout-date-input").value = dateStr;
-      }
+    }
 
-      function startNewWorkout() {
+    function startNewWorkout() {
         currentSession = {
-          date: document.getElementById("workout-date-input").value,
-          title: "pattern A",
-          exercises: [],
+            date: document.getElementById("workout-date-input").value,
+            title: "pattern A",
+            exercises: [],
         };
         renderSession();
         nav("workout");
-      }
+    }
 
-      function spawnNewExercise() {
+    function spawnNewExercise() {
         const name = prompt("Enter exercise name:", "new exercise");
         if (name) openLogger(name);
-      }
+    }
 
-      function openLogger(name, index = null) {
+    function openLogger(name, index = null) {
         editingExerciseIndex = index;
         if (index !== null) {
-          const ex = currentSession.exercises[index];
-          document.getElementById("log-ex-name").value = ex.name;
-          document.getElementById("log-notes").value = ex.notes || "";
-          document.getElementById("val-sets").value = ex.sets;
-          document.getElementById("val-reps").value = ex.reps;
-          document.getElementById("val-rir").value = ex.rir || 0;
-          document.getElementById("val-weight").value = ex.weight;
-          document.getElementById("val-time").value = ex.time || 0;
+            const ex = currentSession.exercises[index];
+            document.getElementById("log-ex-name").value = ex.name;
+            document.getElementById("log-notes").value = ex.notes || "";
+            document.getElementById("val-sets").value = ex.sets;
+            document.getElementById("val-reps").value = ex.reps;
+            document.getElementById("val-rir").value = ex.rir || 0;
+            document.getElementById("val-weight").value = ex.weight;
+            document.getElementById("val-time").value = ex.time || 0;
         } else {
-          document.getElementById("log-ex-name").value = name;
-          document.getElementById("log-notes").value = "";
-          document.getElementById("val-sets").value = 0;
-          document.getElementById("val-reps").value = 0;
-          document.getElementById("val-rir").value = 0;
-          document.getElementById("val-weight").value = 0;
-          document.getElementById("val-time").value = 0;
+            document.getElementById("log-ex-name").value = name;
+            document.getElementById("log-notes").value = "";
+            document.getElementById("val-sets").value = 0;
+            document.getElementById("val-reps").value = 0;
+            document.getElementById("val-rir").value = 0;
+            document.getElementById("val-weight").value = 0;
+            document.getElementById("val-time").value = 0;
         }
         nav("logger");
-      }
+    }
 
-      function step(id, amt) {
+    function step(id, amt) {
         const el = document.getElementById("val-" + id);
-        el.value = (parseFloat(el.value) + amt).toFixed(1).replace(/\.0$/, "");
-        if (parseFloat(el.value) < 0) el.value = 0;
-      }
+        let val = parseFloat(el.value) + amt;
+        el.value = val < 0 ? 0 : val.toFixed(1).replace(/\.0$/, '');
+    }
 
-      function addExerciseToSession() {
+    function addExerciseToSession() {
         const exData = {
-          name: document.getElementById("log-ex-name").value,
-          notes: document.getElementById("log-notes").value,
-          sets: document.getElementById("val-sets").value,
-          reps: document.getElementById("val-reps").value,
-          rir: document.getElementById("val-rir").value,
-          weight: document.getElementById("val-weight").value,
-          time: document.getElementById("val-time").value,
+            name: document.getElementById("log-ex-name").value,
+            notes: document.getElementById("log-notes").value,
+            sets: document.getElementById("val-sets").value,
+            reps: document.getElementById("val-reps").value,
+            rir: document.getElementById("val-rir").value,
+            weight: document.getElementById("val-weight").value,
+            time: document.getElementById("val-time").value
         };
 
         if (editingExerciseIndex !== null) {
-          currentSession.exercises[editingExerciseIndex] = exData;
+            currentSession.exercises[editingExerciseIndex] = exData;
         } else {
-          currentSession.exercises.push(exData);
+            currentSession.exercises.push(exData);
         }
         renderSession();
         nav("workout");
-      }
+    }
 
-      function renderSession() {
+    function renderSession() {
         const container = document.getElementById("current-session-exercises");
         container.innerHTML = "";
-
         currentSession.exercises.forEach((ex, index) => {
-          const div = document.createElement("div");
-          div.className =
-            "bg-panda-pink aspect-square rounded-[30px] p-5 text-panda-charcoal flex flex-col justify-between active:scale-95 transition-transform cursor-pointer shadow-md";
-          div.onclick = () => openLogger(ex.name, index);
-          div.innerHTML = `
-                  <span class="text-xl font-bold leading-tight lowercase">${ex.name}</span>
-                  <div class="flex flex-wrap gap-2 text-[10px] font-bold uppercase opacity-80">
-                      <span>${ex.sets}s / ${ex.reps}r / ${ex.weight}kg</span>
-                  </div>
-              `;
-          container.appendChild(div);
+            const div = document.createElement("div");
+            div.className = "bg-panda-pink aspect-square rounded-[30px] p-5 text-panda-charcoal flex flex-col justify-between active:scale-95 transition-transform cursor-pointer shadow-md";
+            div.onclick = () => openLogger(ex.name, index);
+            div.innerHTML = `
+                <span class="text-xl font-bold leading-tight lowercase">${ex.name}</span>
+                <div class="flex flex-wrap gap-2 text-[10px] font-bold uppercase opacity-80">
+                    <span>${ex.sets}s / ${ex.reps}r / ${ex.weight}kg</span>
+                </div>
+            `;
+            container.appendChild(div);
         });
-
         const addBtn = document.createElement("div");
-        addBtn.className =
-          "border-2 border-dashed border-panda-pink/30 aspect-square rounded-[30px] flex items-center justify-center";
+        addBtn.className = "border-2 border-dashed border-panda-pink/30 aspect-square rounded-[30px] flex items-center justify-center";
         addBtn.innerHTML = `<button onclick="nav('exercise-selection')" class="bg-panda-pink text-white w-16 h-16 rounded-full text-4xl font-thin shadow-lg">+</button>`;
         container.appendChild(addBtn);
-      }
+    }
 
-      // UPDATED SAVE FUNCTION FOR GOOGLE SHEETS
-      async function saveFullWorkout(e) {
+    async function saveFullWorkout(e) {
         const btn = e.target;
-        currentSession.date =
-          document.getElementById("workout-date-input").value;
-        currentSession.title = document.getElementById(
-          "workout-title-input"
-        ).value;
+        currentSession.date = document.getElementById("workout-date-input").value;
+        currentSession.title = document.getElementById("workout-title-input").value;
 
-        if (currentSession.exercises.length === 0) {
-          alert("Add at least one exercise first!");
-          return;
-        }
+        if (currentSession.exercises.length === 0) return;
 
-        const oldText = btn.innerText;
-        btn.innerText = "Saving... 🐼";
+        btn.innerText = "Saving... 🚀";
         btn.disabled = true;
 
         try {
-          // Sending to Google Sheets
-          await fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(currentSession),
-          });
+            await fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(currentSession)
+            });
 
-          // Local Feedback
-          btn.innerText = "Saved! 🐼";
-          setTimeout(() => {
+            // 1. Add to local history array
             history.unshift({ ...currentSession });
-            renderHistory();
-            btn.innerText = oldText;
-            btn.disabled = false;
-            nav("dashboard");
-          }, 1000);
-        } catch (error) {
-          console.error("Save failed", error);
-          alert("Error saving to Sheet. Check URL or Internet.");
-          btn.innerText = "Error!";
-          btn.disabled = false;
-        }
-      }
+            
+            // 2. SAVE TO PHONE MEMORY (LocalStorage)
+            localStorage.setItem('blubb_history', JSON.stringify(history));
 
-      function renderHistory() {
+            renderHistory();
+            btn.innerText = "Saved! 🐼";
+            setTimeout(() => {
+                btn.innerText = "Save!";
+                btn.disabled = false;
+                nav("dashboard");
+            }, 1000);
+
+        } catch (error) {
+            alert("Error saving! Check your URL.");
+            btn.innerText = "Error!";
+            btn.disabled = false;
+        }
+    }
+
+    function renderHistory() {
         const container = document.getElementById("past-workouts-container");
         container.innerHTML = "";
         history.forEach((workout) => {
-          const card = document.createElement("div");
-          card.className = `workout-card bg-panda-grey text-panda-charcoal rounded-[40px] p-8 shadow-xl relative`;
-          let exHtml = workout.exercises
-            .map(
-              (ex) => `
-                  <div class="flex justify-between py-2 border-b border-black/5 text-sm lowercase">
-                      <span class="font-thin">${ex.name}</span>
-                      <span class="font-bold">${ex.sets}s / ${ex.reps}r / ${ex.weight}kg</span>
-                  </div>`
-            )
-            .join("");
-
-          card.innerHTML = `
-                  <span class="text-lg opacity-60 font-thin">${workout.date}</span>
-                  <h3 class="text-3xl font-black uppercase tracking-tighter mb-4">${workout.title}</h3>
-                  <div class="exercise-summary hidden mt-4 space-y-1">${exHtml}</div>`;
-
-          card.onclick = () => {
-            const isExpanded = card.classList.contains("expanded");
-            document.querySelectorAll(".workout-card").forEach((c) => {
-              c.classList.remove("expanded");
-              c.querySelector(".exercise-summary").classList.add("hidden");
-            });
-            if (!isExpanded) {
-              card.classList.add("expanded");
-              card
-                .querySelector(".exercise-summary")
-                .classList.remove("hidden");
-            }
-          };
-          container.appendChild(card);
+            const card = document.createElement("div");
+            card.className = "workout-card bg-panda-grey text-panda-charcoal rounded-[40px] p-8 shadow-xl relative";
+            let exHtml = workout.exercises.map(ex => `
+                <div class="flex justify-between py-2 border-b border-black/5 text-sm lowercase">
+                    <span class="font-thin">${ex.name}</span>
+                    <span class="font-bold">${ex.sets}s / ${ex.reps}r / ${ex.weight}kg</span>
+                </div>`).join("");
+            card.innerHTML = `
+                <span class="text-lg opacity-60 font-thin">${workout.date}</span>
+                <h3 class="text-3xl font-black uppercase tracking-tighter mb-4">${workout.title}</h3>
+                <div class="exercise-summary hidden mt-4 space-y-1">${exHtml}</div>`;
+            card.onclick = () => {
+                const isExpanded = card.classList.contains("expanded");
+                document.querySelectorAll(".workout-card").forEach(c => {
+                    c.classList.remove("expanded");
+                    c.querySelector(".exercise-summary").classList.add("hidden");
+                });
+                if (!isExpanded) {
+                    card.classList.add("expanded");
+                    card.querySelector(".exercise-summary").classList.remove("hidden");
+                }
+            };
+            container.appendChild(card);
         });
-      }
+    }
 
-      updateDates();
-    </script>
+    // LOAD DATA ON STARTUP
+    function init() {
+        updateDates();
+        const saved = localStorage.getItem('blubb_history');
+        if (saved) {
+            history = JSON.parse(saved);
+            renderHistory();
+        }
+    }
+
+    init();
+</script>
   </body>
 </html>
