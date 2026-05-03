@@ -178,42 +178,17 @@
     </div>
 
     <!-- 4. EXERCISE SELECTION GRID -->
-    <div id="screen-exercise-selection" class="screen bg-panda-pink p-8">
-      <button
-        onclick="nav('workout')"
-        class="text-white text-xl font-thin mb-10 block"
-      >
-        ← Cancel
-      </button>
-      <div class="grid grid-cols-2 gap-5">
-        <div
-          class="bg-[#29292b] aspect-square rounded-[40px] p-6 flex items-center justify-center"
-        >
-          <button
-            onclick="spawnNewExercise()"
-            class="text-white text-6xl font-thin"
-          >
-            +
-          </button>
-        </div>
-        <button
-          onclick="openLogger('bench press')"
-          class="bg-[#29292b] aspect-square rounded-[40px] p-6 text-left flex flex-col justify-end"
-        >
-          <span class="text-white text-2xl font-thin leading-tight lowercase"
-            >bench<br />press</span
-          >
-        </button>
-        <button
-          onclick="openLogger('lat pulldown')"
-          class="bg-[#29292b] aspect-square rounded-[40px] p-6 text-left flex flex-col justify-end"
-        >
-          <span class="text-white text-2xl font-thin leading-tight lowercase"
-            >lat<br />pulldown</span
-          >
-        </button>
-      </div>
+<div id="screen-exercise-selection" class="screen bg-panda-pink p-8">
+  <button onclick="nav('workout')" class="text-white text-xl font-thin mb-10 block">← Cancel</button>
+  
+  <!-- This container will now be dynamic -->
+  <div id="exercise-library-grid" class="grid grid-cols-2 gap-5">
+    <!-- The "+" button stays, JS will inject the rest -->
+    <div class="bg-[#29292b] aspect-square rounded-[40px] p-6 flex items-center justify-center">
+      <button onclick="spawnNewExercise()" class="text-white text-6xl font-thin">+</button>
     </div>
+  </div>
+</div>
 
     <!-- 5. ADD EXERCISE DATA (THE LOGGER) -->
     <div id="screen-logger" class="screen bg-panda-pink p-8 overflow-y-auto">
