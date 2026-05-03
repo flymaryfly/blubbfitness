@@ -34,14 +34,18 @@
     /* Card Overlap & Zebra Logic */
     .workout-card {
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-        margin-bottom: -120px; /* How much they overlap */
+        margin-bottom: -160px; /* Increased overlap to show the dates better */
         cursor: pointer;
         position: relative;
+        border-top: 1px solid rgba(0,0,0,0.05); /* Subtle line to separate stacked cards */
     }
     
-    /* Alternate colors for better visibility */
+    /* Alternate colors: Grey and a slightly darker "Panda Slate" */
     .workout-card:nth-child(even) {
-        background-color: #f1f3f9; /* Slightly lighter grey */
+        background-color: #dbdee9; 
+    }
+    .workout-card:nth-child(odd) {
+        background-color: #f1f3f9;
     }
 
     .workout-card.expanded {
@@ -49,6 +53,7 @@
         transform: translateY(-10px);
         z-index: 50;
         box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        background-color: #ffffff !important; /* Highlights the one you're looking at */
     }
 
     input, textarea {
