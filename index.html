@@ -11,58 +11,57 @@
     <link rel="stylesheet" href="https://use.typekit.net/lkm0rfm.css" />
 
     <style>
-      body {
+     body {
         font-family: "area-normal", sans-serif;
         background-color: #1a1a1b;
         color: white;
         overflow-x: hidden;
-      }
-      .bg-panda-pink {
-        background-color: #d76972;
-      }
-      .bg-panda-grey {
-        background-color: #dbdee9;
-      }
-      .text-panda-charcoal {
-        color: #29292b;
-      }
+    }
+    .bg-panda-pink { background-color: #d76972; }
+    .bg-panda-grey { background-color: #dbdee9; }
+    .text-panda-charcoal { color: #29292b; }
 
-      .screen {
+    .screen {
         display: none;
         min-height: 100vh;
         width: 100vw;
         position: absolute;
         top: 0;
         left: 0;
-      }
-      .screen-active {
-        display: block;
-      }
+    }
+    .screen-active { display: block; }
 
-      /* Card Overlap Styling */
-      .workout-card {
-        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        margin-bottom: -110px;
+    /* Card Overlap & Zebra Logic */
+    .workout-card {
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        margin-bottom: -120px; /* How much they overlap */
         cursor: pointer;
-      }
-      .workout-card.expanded {
-        margin-bottom: 20px;
-        transform: scale(1.02);
-        z-index: 50;
-      }
+        position: relative;
+    }
+    
+    /* Alternate colors for better visibility */
+    .workout-card:nth-child(even) {
+        background-color: #f1f3f9; /* Slightly lighter grey */
+    }
 
-      input,
-      textarea {
+    .workout-card.expanded {
+        margin-bottom: 20px;
+        transform: translateY(-10px);
+        z-index: 50;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    input, textarea {
         background: transparent;
         border: none;
         outline: none;
         color: inherit;
-      }
-      input::-webkit-outer-spin-button,
-      input::-webkit-inner-spin-button {
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
-      }
+    }
     </style>
   </head>
   <body class="antialiased">
@@ -360,13 +359,13 @@
       </div>
     </div>
 
- <script>
-    let exerciseLibrary = ['bench press', 'lat pulldown']; // Default starting exercises
+<script>
+    let exerciseLibrary = ['bench press', 'lat pulldown'];
     let history = [];
     let currentSession = null;
     let editingExerciseIndex = null;
+    let editingHistoryIndex = null; // Track if we are editing an old workout
 
-    // --- YOUR SETTINGS ---
     const SCRIPT_URL = "YOUR_DEPLOYED_URL_HERE"; 
 
     function nav(screenId) {
@@ -385,11 +384,25 @@
     }
 
     function startNewWorkout() {
+        editingHistoryIndex = null; // Fresh workout
         currentSession = {
             date: document.getElementById("workout-date-input").value,
             title: "pattern A",
             exercises: [],
         };
+        document.getElementById("workout-title-input").value = "pattern A";
+        renderSession();
+        nav("workout");
+    }
+
+    // Function to load a past workout back into the editor
+    function editPastWorkout(index) {
+        editingHistoryIndex = index;
+        currentSession = JSON.parse(JSON.stringify(history[index])); // Deep copy
+        
+        document.getElementById("workout-date-input").value = currentSession.date;
+        document.getElementById("workout-title-input").value = currentSession.title;
+        
         renderSession();
         nav("workout");
     }
@@ -405,7 +418,7 @@
             }
             openLogger(lowerName);
         }
-    } // Fixed the missing bracket here!
+    }
 
     function openLogger(name, index = null) {
         editingExerciseIndex = index;
@@ -495,7 +508,12 @@
                 body: JSON.stringify(currentSession)
             });
 
-            history.unshift({ ...currentSession });
+            if (editingHistoryIndex !== null) {
+                history[editingHistoryIndex] = { ...currentSession };
+            } else {
+                history.unshift({ ...currentSession });
+            }
+            
             localStorage.setItem('blubb_history', JSON.stringify(history));
 
             renderHistory();
@@ -507,7 +525,7 @@
             }, 1000);
 
         } catch (error) {
-            alert("Error saving! Check your URL.");
+            alert("Error saving!");
             btn.innerText = "Error!";
             btn.disabled = false;
         }
@@ -516,19 +534,26 @@
     function renderHistory() {
         const container = document.getElementById("past-workouts-container");
         container.innerHTML = "";
-        history.forEach((workout) => {
+        history.forEach((workout, index) => {
             const card = document.createElement("div");
-            card.className = "workout-card bg-panda-grey text-panda-charcoal rounded-[40px] p-8 shadow-xl relative";
+            card.className = "workout-card bg-panda-grey text-panda-charcoal rounded-[40px] p-8 shadow-xl";
+            
             let exHtml = workout.exercises.map(ex => `
                 <div class="flex justify-between py-2 border-b border-black/5 text-sm lowercase">
                     <span class="font-thin">${ex.name}</span>
                     <span class="font-bold">${ex.sets}s / ${ex.reps}r / ${ex.weight}kg</span>
                 </div>`).join("");
+
             card.innerHTML = `
                 <span class="text-lg opacity-60 font-thin">${workout.date}</span>
                 <h3 class="text-3xl font-black uppercase tracking-tighter mb-4">${workout.title}</h3>
-                <div class="exercise-summary hidden mt-4 space-y-1">${exHtml}</div>`;
-            card.onclick = () => {
+                <div class="exercise-summary hidden mt-4 space-y-1">
+                    ${exHtml}
+                    <button onclick="editPastWorkout(${index})" class="w-full mt-6 bg-[#29292b] text-white py-3 rounded-full font-bold uppercase text-xs tracking-widest">Edit Workout</button>
+                </div>`;
+            
+            card.onclick = (e) => {
+                if (e.target.tagName === 'BUTTON') return; // Don't toggle if clicking the edit button
                 const isExpanded = card.classList.contains("expanded");
                 document.querySelectorAll(".workout-card").forEach(c => {
                     c.classList.remove("expanded");
@@ -545,7 +570,7 @@
 
     function renderLibrary() {
         const grid = document.getElementById("exercise-library-grid");
-        const plusButton = grid.firstElementChild;
+        const plusButton = grid.querySelector('div'); // Get the + button container
         grid.innerHTML = "";
         grid.appendChild(plusButton);
 
@@ -561,15 +586,11 @@
 
     function init() {
         updateDates();
-        
-        // Load Workout History
         const savedHistory = localStorage.getItem('blubb_history');
         if (savedHistory) {
             history = JSON.parse(savedHistory);
             renderHistory();
         }
-
-        // Load Exercise Library
         const savedLibrary = localStorage.getItem('blubb_library');
         if (savedLibrary) {
             exerciseLibrary = JSON.parse(savedLibrary);
@@ -577,7 +598,7 @@
         renderLibrary();
     }
 
-    init(); // Start it all up!
+    init();
 </script>
   </body>
 </html>
