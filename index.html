@@ -536,12 +536,14 @@
         }
     }
 
-    function renderHistory() {
+   function renderHistory() {
         const container = document.getElementById("past-workouts-container");
         container.innerHTML = "";
         history.forEach((workout, index) => {
             const card = document.createElement("div");
-            card.className = "workout-card bg-panda-grey text-panda-charcoal rounded-[40px] p-8 shadow-xl";
+            // We set a decreasing z-index so the newest workout is always "on top"
+            card.style.zIndex = history.length - index; 
+            card.className = "workout-card text-panda-charcoal rounded-[40px] p-8 shadow-xl";
             
             let exHtml = workout.exercises.map(ex => `
                 <div class="flex justify-between py-2 border-b border-black/5 text-sm lowercase">
@@ -554,19 +556,24 @@
                 <h3 class="text-3xl font-black uppercase tracking-tighter mb-4">${workout.title}</h3>
                 <div class="exercise-summary hidden mt-4 space-y-1">
                     ${exHtml}
-                    <button onclick="editPastWorkout(${index})" class="w-full mt-6 bg-[#29292b] text-white py-3 rounded-full font-bold uppercase text-xs tracking-widest">Edit Workout</button>
+                    <button onclick="editPastWorkout(${index})" class="w-full mt-6 bg-[#29292b] text-white py-4 rounded-full font-bold uppercase text-xs tracking-widest active:scale-95 transition-transform">Edit Workout</button>
                 </div>`;
             
             card.onclick = (e) => {
-                if (e.target.tagName === 'BUTTON') return; // Don't toggle if clicking the edit button
+                if (e.target.tagName === 'BUTTON') return;
                 const isExpanded = card.classList.contains("expanded");
-                document.querySelectorAll(".workout-card").forEach(c => {
+                
+                // Reset all cards
+                document.querySelectorAll(".workout-card").forEach((c, idx) => {
                     c.classList.remove("expanded");
                     c.querySelector(".exercise-summary").classList.add("hidden");
+                    c.style.zIndex = history.length - idx; // Reset Z-index
                 });
+
                 if (!isExpanded) {
                     card.classList.add("expanded");
                     card.querySelector(".exercise-summary").classList.remove("hidden");
+                    card.style.zIndex = 100; // Bring expanded card to the absolute front
                 }
             };
             container.appendChild(card);
