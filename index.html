@@ -31,15 +31,16 @@
     }
     .screen-active { display: block; }
 
-    .workout-card {
-        transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
-        margin-bottom: -150px; /* Adjust this to show more/less of the 'peek' */
-        cursor: pointer;
-        position: relative;
-        border-radius: 50px; 
-        border: 1px solid rgba(0,0,0,0.05); /* Slight definition between cards */
-    }
-
+   .workout-card {
+    transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+    margin-bottom: -150px; 
+    cursor: pointer;
+    position: relative;
+    border-radius: 50px; 
+    background-color: #ffffff; /* Add this! */
+    overflow: hidden;         /* Add this to keep the rounded corners clean */
+    border: 1px solid rgba(0,0,0,0.05);
+}
     .workout-card.expanded {
         margin-bottom: 20px;
         margin-top: 10px;
@@ -530,58 +531,54 @@
     }
 
   function renderHistory() {
-        const container = document.getElementById("past-workouts-container");
-        container.innerHTML = "";
+    const container = document.getElementById("past-workouts-container");
+    container.innerHTML = "";
+    
+    if (history.length === 0) return;
+
+    history.forEach((workout, index) => {
+        const card = document.createElement("div");
         
-        if (history.length === 0) return;
+        // Fix: Newer workouts (lower index) get HIGHER z-index
+        card.style.zIndex = history.length - index; 
+        
+        card.className = "workout-card text-panda-charcoal p-10 shadow-2xl";
+        
+        let exHtml = workout.exercises.map(ex => `
+            <div class="flex justify-between py-3 border-b border-black/5 text-sm lowercase">
+                <span class="font-thin">${ex.name}</span>
+                <span class="font-bold">${ex.sets}s / ${ex.reps}r / ${ex.weight}kg</span>
+            </div>`).join("");
 
-        history.forEach((workout, index) => {
-            const card = document.createElement("div");
+        card.innerHTML = `
+            <span class="text-lg opacity-40 font-thin lowercase">${workout.date}</span>
+            <h3 class="text-4xl font-black uppercase tracking-tighter mb-2">${workout.title}</h3>
+            <div class="exercise-summary hidden mt-6 space-y-1">
+                ${exHtml}
+                <button onclick="editPastWorkout(${index})" class="w-full mt-8 bg-[#29292b] text-white py-5 rounded-full font-bold uppercase text-xs tracking-[0.2em] active:scale-95 transition-transform">Edit Workout</button>
+            </div>`;
+        
+        card.onclick = (e) => {
+            if (e.target.tagName === 'BUTTON') return;
             
-            // INVERTED LOGIC: 
-            // The newest workout (index 0) gets z-index 0.
-            // The oldest workout (last index) gets the highest z-index.
-            // This makes the oldest card sit "on top" of the stack.
-            card.style.zIndex = index; 
+            const isExpanded = card.classList.contains("expanded");
             
-            card.className = "workout-card text-panda-charcoal p-10 shadow-2xl";
-            
-            let exHtml = workout.exercises.map(ex => `
-                <div class="flex justify-between py-3 border-b border-black/5 text-sm lowercase">
-                    <span class="font-thin">${ex.name}</span>
-                    <span class="font-bold">${ex.sets}s / ${ex.reps}r / ${ex.weight}kg</span>
-                </div>`).join("");
+            document.querySelectorAll(".workout-card").forEach((c, idx) => {
+                c.classList.remove("expanded");
+                c.querySelector(".exercise-summary").classList.add("hidden");
+                // Reset to original stacking order
+                c.style.zIndex = history.length - idx; 
+            });
 
-            card.innerHTML = `
-                <span class="text-lg opacity-40 font-thin lowercase">${workout.date}</span>
-                <h3 class="text-4xl font-black uppercase tracking-tighter mb-2">${workout.title}</h3>
-                <div class="exercise-summary hidden mt-6 space-y-1">
-                    ${exHtml}
-                    <button onclick="editPastWorkout(${index})" class="w-full mt-8 bg-[#29292b] text-white py-5 rounded-full font-bold uppercase text-xs tracking-[0.2em] active:scale-95 transition-transform">Edit Workout</button>
-                </div>`;
-            
-            card.onclick = (e) => {
-                if (e.target.tagName === 'BUTTON') return;
-                
-                const isExpanded = card.classList.contains("expanded");
-                
-                // Reset all cards
-                document.querySelectorAll(".workout-card").forEach((c, idx) => {
-                    c.classList.remove("expanded");
-                    c.querySelector(".exercise-summary").classList.add("hidden");
-                    // Reset to the "peeking" z-index
-                    c.style.zIndex = idx; 
-                });
-
-                if (!isExpanded) {
-                    card.classList.add("expanded");
-                    card.querySelector(".exercise-summary").classList.remove("hidden");
-                    card.style.zIndex = 1000; // Bring specific card to front
-                }
-            };
-            container.appendChild(card);
-        });
-    }
+            if (!isExpanded) {
+                card.classList.add("expanded");
+                card.querySelector(".exercise-summary").classList.remove("hidden");
+                card.style.zIndex = 1000; 
+            }
+        };
+        container.appendChild(card);
+    });
+}
   
     function renderLibrary() {
         const grid = document.getElementById("exercise-library-grid");
