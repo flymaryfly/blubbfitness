@@ -360,7 +360,8 @@
       </div>
     </div>
 
-  <script>
+ <script>
+    let exerciseLibrary = ['bench press', 'lat pulldown']; // Default starting exercises
     let history = [];
     let currentSession = null;
     let editingExerciseIndex = null;
@@ -394,9 +395,17 @@
     }
 
     function spawnNewExercise() {
-        const name = prompt("Enter exercise name:", "new exercise");
-        if (name) openLogger(name);
-    }
+        const name = prompt("Enter new exercise name:", "cardio");
+        if (name && name.trim() !== "") {
+            const lowerName = name.toLowerCase();
+            if (!exerciseLibrary.includes(lowerName)) {
+                exerciseLibrary.push(lowerName);
+                localStorage.setItem('blubb_library', JSON.stringify(exerciseLibrary));
+                renderLibrary();
+            }
+            openLogger(lowerName);
+        }
+    } // Fixed the missing bracket here!
 
     function openLogger(name, index = null) {
         editingExerciseIndex = index;
@@ -486,10 +495,7 @@
                 body: JSON.stringify(currentSession)
             });
 
-            // 1. Add to local history array
             history.unshift({ ...currentSession });
-            
-            // 2. SAVE TO PHONE MEMORY (LocalStorage)
             localStorage.setItem('blubb_history', JSON.stringify(history));
 
             renderHistory();
@@ -537,17 +543,41 @@
         });
     }
 
-    // LOAD DATA ON STARTUP
-    function init() {
-        updateDates();
-        const saved = localStorage.getItem('blubb_history');
-        if (saved) {
-            history = JSON.parse(saved);
-            renderHistory();
-        }
+    function renderLibrary() {
+        const grid = document.getElementById("exercise-library-grid");
+        const plusButton = grid.firstElementChild;
+        grid.innerHTML = "";
+        grid.appendChild(plusButton);
+
+        exerciseLibrary.forEach(exName => {
+            const btn = document.createElement("button");
+            btn.onclick = () => openLogger(exName);
+            btn.className = "bg-[#29292b] aspect-square rounded-[40px] p-6 text-left flex flex-col justify-end active:scale-95 transition-transform";
+            const formattedName = exName.replace(" ", "<br />");
+            btn.innerHTML = `<span class="text-white text-2xl font-thin leading-tight lowercase">${formattedName}</span>`;
+            grid.appendChild(btn);
+        });
     }
 
-    init();
+    function init() {
+        updateDates();
+        
+        // Load Workout History
+        const savedHistory = localStorage.getItem('blubb_history');
+        if (savedHistory) {
+            history = JSON.parse(savedHistory);
+            renderHistory();
+        }
+
+        // Load Exercise Library
+        const savedLibrary = localStorage.getItem('blubb_library');
+        if (savedLibrary) {
+            exerciseLibrary = JSON.parse(savedLibrary);
+        }
+        renderLibrary();
+    }
+
+    init(); // Start it all up!
 </script>
   </body>
 </html>
