@@ -20,17 +20,24 @@
 html, body {
     margin: 0;
     padding: 0;
-    height: 100%;
+    /* Changed height to 100dvh (Dynamic Viewport Height) */
+    height: 100dvh; 
     width: 100%;
-    overflow-x: hidden; 
-    overflow-y: auto;
+    
+    /* This stops the "pull-down" bounce effect */
+    overscroll-behavior: none; 
+    
+    /* Changed to hidden so the base page never scrolls */
+    overflow: hidden; 
+  user-select: none;
+
     background: linear-gradient(180deg, #D9DEEB 0%, #EC9B91 100%) !important;
     background-attachment: fixed !important;
+    
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: #29292b;
     -webkit-font-smoothing: antialiased;
 }
-/* Ensure the screen-active class doesn't accidentally bring its own background */
       
 #welcome-screen.screen-active {
     display: flex;
@@ -111,7 +118,7 @@ html, body {
  <body class="antialiased">
    <!-- Welcome Screen -->
    <!-- Removed 'fixed' so it stays within the flow of the body gradient -->
-<div id="welcome-screen" class="screen-active screen flex flex-col items-start px-12 pt-[35vh] min-h-screen bg-transparent">
+<div id="welcome-screen" class="screen-active screen flex flex-col items-start px-12 pt-[35vh] h-full bg-transparent">
 
        <h1 class="mb-4">Blubb</h1> 
        
