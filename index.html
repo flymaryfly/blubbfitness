@@ -13,20 +13,20 @@
     <title>Blubb Fitness</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://use.typekit.net/lkm0rfm.css" />
+    <meta name="theme-color" content="#D9DEEB">
 
     <style>
 /* Base setup for the gradient and font */
       
-html {
-    /* This ensures the gradient fills the entire browser window */
-    height: 100%;
-}
-
-body {
+html, body {
     margin: 0;
     padding: 0;
-    min-height: 100%;
-    /* Forced background with !important to override any Tailwind utility classes */
+    height: 100%;
+    width: 100%;
+    /* This prevents the white bar by "containing" internal margins */
+    overflow-x: hidden; 
+    overflow-y: auto;
+    
     background: linear-gradient(180deg, #D9DEEB 0%, #EC9B91 100%) !important;
     background-attachment: fixed !important;
     
@@ -114,7 +114,7 @@ body {
  <body class="antialiased">
    <!-- Welcome Screen -->
    <!-- Removed 'fixed' so it stays within the flow of the body gradient -->
-   <div id="welcome-screen" class="flex flex-col items-start px-12 pt-[35vh] min-h-screen bg-transparent">
+   <div id="welcome-screen" class="flex flex-col items-start px-12 pt-[35vh] min-h-screen bg-transparent pt-[env(safe-area-inset-top)]">
        <h1 class="mb-4">Blubb</h1>
        
        <p class="mb-20">
