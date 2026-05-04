@@ -15,39 +15,45 @@
     <link rel="stylesheet" href="https://use.typekit.net/lkm0rfm.css" />
 
     <style>
-       <link rel="stylesheet" href="https://use.typekit.net/lkm0rfm.css">
-body {
-    font-family: 'Geist', sans-serif;
-    background: linear-gradient(180deg, #e5b3b3 0%, #eb8c8c 100%);
+/* Base setup for the gradient and font */
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    /* Your new requested colors: D9DEEB (top) to EC9B91 (bottom) */
+    background: linear-gradient(180deg, #D9DEEB 0%, #EC9B91 100%);
+    background-attachment: fixed;
+    /* This keeps the "System" font look you liked in the screenshot */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: #29292b;
-    -webkit-font-smoothing: antialiased; /* Makes thin weights look crisper on iOS */
+    -webkit-font-smoothing: antialiased;
 }
 
 /* "Blubb" Logo */
 #welcome-screen h1 {
     font-weight: 900; 
-    font-size: 110px;
-    line-height: 0.9;
-    letter-spacing: -0.06em; /* Geist is airy; we need to tighten it for the logo look */
-    margin-left: -8px; /* Pull the 'B' left so it visually aligns with the text below */
+    font-size: 120px; /* Slightly larger to match your design */
+    line-height: 0.85;
+    letter-spacing: -0.07em; 
+    margin-left: -8px; 
 }
 
 /* The Tagline */
 #welcome-screen p {
-    font-weight: 100;
-    font-size: 2.2rem;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    font-weight: 200; /* Adjusted for that thin system look */
+    font-size: 2.4rem;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
 }
 
 /* Start Button */
 #welcome-screen button {
-    font-weight: 900;
-    font-size: 1.75rem;
+    font-weight: 800;
+    font-size: 2rem;
     letter-spacing: -0.02em;
-    /* Ensuring the button stays left-aligned with the 'B' */
     align-self: flex-start; 
 }
+
     .bg-panda-pink { background-color: #d76972; }
     .bg-panda-grey { background-color: #dbdee9; }
     .text-panda-charcoal { color: #29292b; }
@@ -94,21 +100,22 @@ body {
     }
     </style>
   </head>
-  <body class="antialiased">
+ <body class="antialiased">
    <!-- Welcome Screen -->
-<div id="welcome-screen" class="fixed inset-0 flex flex-col items-start px-12 pt-[35vh]">
-    <h1 class="mb-4">Blubb</h1>
-    
-    <p class="mb-16">
-        the fitness app<br>
-        for pandas<br>
-        by pandas
-    </p>
+   <!-- Removed 'fixed' so it stays within the flow of the body gradient -->
+   <div id="welcome-screen" class="flex flex-col items-start px-12 pt-[35vh] min-h-screen">
+       <h1 class="mb-4">Blubb</h1>
+       
+       <p class="mb-20">
+           the fitness app<br>
+           for pandas<br>
+           by pandas
+       </p>
 
-    <button onclick="showWorkout()" class="bg-[#29292b] text-white px-12 py-6 rounded-[35px] active:scale-95 transition-transform">
-        Start!
-    </button>
-</div>
+       <button onclick="showWorkout()" class="bg-[#29292b] text-white px-14 py-7 rounded-[45px] active:scale-95 transition-transform">
+           Start!
+       </button>
+   </div>
 
     <!-- 2. MAIN DASHBOARD -->
     <div id="screen-dashboard" class="screen bg-[#1a1a1b]">
