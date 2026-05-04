@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="stylesheet" href="https://use.typekit.net/lkm0rfm.css">
+    
     <meta charset="UTF-8" />
     <meta
       name="viewport"
@@ -11,8 +13,24 @@
     <link rel="stylesheet" href="https://use.typekit.net/lkm0rfm.css" />
 
     <style>
+      /* Apply your Adobe Font */
+body {
+    font-family: "area-normal-bold", sans-serif; /* Replace with the exact name from Adobe */
+    background: linear-gradient(180deg, #e5b3b3 0%, #eb8c8c 100%);
+    color: #29292b;
+}
+
+#welcome-screen h1 {
+    /* Ensures the "B" sits flush against the left padding */
+    margin-left: -5px; 
+}
+
+/* Adjusting the button specifically to match the design's weight */
+#welcome-screen button {
+    letter-spacing: -0.02em;
+}
      body {
-        font-family: "area-normal", sans-serif;
+        font-family: "area-normal-thin", sans-serif;
         background-color: #1a1a1b;
         color: white;
         overflow-x: hidden;
@@ -64,26 +82,23 @@
     </style>
   </head>
   <body class="antialiased">
-    <!-- 1. WELCOME SCREEN -->
-    <div
-      id="screen-welcome"
-      class="screen screen-active bg-gradient-to-b from-[#e8a3a9] to-[#d76972] flex flex-col items-center justify-left p-10 text-left"
-    >
-      <h1 class="text-8xl font-black tracking-tighter text-[#29292b] mb-2">
-        Blubb
-      </h1>
-      <p
-        class="text-3xl font-thin text-[#29292b] opacity-80 mb-20 leading-tight"
-      >
-        the fitness app<br />for pandas<br />by pandas
-      </p>
-      <button
-        onclick="nav('dashboard')"
-        class="bg-[#29292b] text-panda-grey px-14 py-4 rounded-full text-2xl font-thin active:scale-95 transition-transform"
-      >
+   <!-- Welcome Screen -->
+<div id="welcome-screen" class="fixed inset-0 flex flex-col items-start px-12 pt-[30vh] z-50">
+    <!-- Main Branding -->
+    <h1 class="text-[120px] font-black leading-none tracking-tighter mb-4">Blubb</h1>
+    
+    <!-- Tagline -->
+    <p class="text-3xl font-light leading-tight mb-20 opacity-80">
+        the fitness app<br>
+        for pandas<br>
+        by pandas
+    </p>
+
+    <!-- Start Button -->
+    <button onclick="showWorkout()" class="bg-[#29292b] text-white px-10 py-6 rounded-[40px] text-2xl font-medium transition-transform active:scale-95">
         Start!
-      </button>
-    </div>
+    </button>
+</div>
 
     <!-- 2. MAIN DASHBOARD -->
     <div id="screen-dashboard" class="screen bg-[#1a1a1b]">
