@@ -23,18 +23,14 @@ html, body {
     padding: 0;
     height: 100%;
     width: 100%;
-    /* This prevents the white bar by "containing" internal margins */
     overflow-x: hidden; 
     overflow-y: auto;
-    
     background: linear-gradient(180deg, #D9DEEB 0%, #EC9B91 100%) !important;
     background-attachment: fixed !important;
-    
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: #29292b;
     -webkit-font-smoothing: antialiased;
 }
-
 /* Ensure the screen-active class doesn't accidentally bring its own background */
 #welcome-screen.screen-active {
     display: flex;
