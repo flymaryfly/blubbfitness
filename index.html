@@ -16,8 +16,7 @@
     <meta name="theme-color" content="#D9DEEB">
 
     <style>
-/* Base setup for the gradient and font */
-      
+
 html, body {
     margin: 0;
     padding: 0;
@@ -32,6 +31,7 @@ html, body {
     -webkit-font-smoothing: antialiased;
 }
 /* Ensure the screen-active class doesn't accidentally bring its own background */
+      
 #welcome-screen.screen-active {
     display: flex;
     background: transparent !important;
@@ -39,10 +39,11 @@ html, body {
 /* "Blubb" Logo */
 #welcome-screen h1 {
     font-weight: 900; 
-    font-size: 120px; /* Slightly larger to match your design */
+    font-size: 120px;
     line-height: 0.85;
     letter-spacing: -0.07em; 
     margin-left: -8px; 
+    margin-top: 0; /* Forces the margin to zero */
 }
 
 /* The Tagline */
@@ -110,8 +111,9 @@ html, body {
  <body class="antialiased">
    <!-- Welcome Screen -->
    <!-- Removed 'fixed' so it stays within the flow of the body gradient -->
-  <div id="welcome-screen" class="screen flex flex-col items-start px-12 pt-[35vh] min-h-screen bg-transparent">
-       <h1 class="mb-4">Blubb</h1>
+<div id="welcome-screen" class="screen-active screen flex flex-col items-start px-12 pt-[35vh] min-h-screen bg-transparent">
+
+       <h1 class="mb-4">Blubb</h1> 
        
        <p class="mb-20">
            the fitness app<br>
