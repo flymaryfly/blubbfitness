@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="stylesheet" href="https://use.typekit.net/lkm0rfm.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;900&display=swap" rel="stylesheet">
     
     <meta charset="UTF-8" />
     <meta
@@ -15,26 +17,37 @@
     <style>
        <link rel="stylesheet" href="https://use.typekit.net/lkm0rfm.css">
 body {
-    font-family: "area-normal-extrabold"; 
-    background: linear-gradient(180deg, #dbdbdb 0%, #d59486 100%);
+    font-family: 'Geist', sans-serif;
+    background: linear-gradient(180deg, #e5b3b3 0%, #eb8c8c 100%);
     color: #29292b;
+    -webkit-font-smoothing: antialiased; /* Makes thin weights look crisper on iOS */
 }
 
+/* "Blubb" Logo */
 #welcome-screen h1 {
-    /* Ensures the "B" sits flush against the left padding */
-    margin-left: -5px; 
+    font-weight: 900; 
+    font-size: 110px;
+    line-height: 0.9;
+    letter-spacing: -0.06em; /* Geist is airy; we need to tighten it for the logo look */
+    margin-left: -8px; /* Pull the 'B' left so it visually aligns with the text below */
 }
 
-/* Adjusting the button specifically to match the design's weight */
-#welcome-screen button {
+/* The Tagline */
+#welcome-screen p {
+    font-weight: 100;
+    font-size: 2.2rem;
+    line-height: 1.1;
     letter-spacing: -0.02em;
 }
-     body {
-        font-family: "area-normal-thin";
-        background-color: #1a1a1b;
-        color: white;
-        overflow-x: hidden;
-    }
+
+/* Start Button */
+#welcome-screen button {
+    font-weight: 900;
+    font-size: 1.75rem;
+    letter-spacing: -0.02em;
+    /* Ensuring the button stays left-aligned with the 'B' */
+    align-self: flex-start; 
+}
     .bg-panda-pink { background-color: #d76972; }
     .bg-panda-grey { background-color: #dbdee9; }
     .text-panda-charcoal { color: #29292b; }
@@ -83,19 +96,16 @@ body {
   </head>
   <body class="antialiased">
    <!-- Welcome Screen -->
-<div id="welcome-screen" class="fixed inset-0 flex flex-col items-start px-12 pt-[30vh] z-50">
-    <!-- Main Branding -->
-    <h1 class="text-[120px] font-black leading-none tracking-tighter mb-4">Blubb</h1>
+<div id="welcome-screen" class="fixed inset-0 flex flex-col items-start px-12 pt-[35vh]">
+    <h1 class="mb-4">Blubb</h1>
     
-    <!-- Tagline -->
-    <p class="text-3xl font-light leading-tight mb-20 opacity-80">
+    <p class="mb-16">
         the fitness app<br>
         for pandas<br>
         by pandas
     </p>
 
-    <!-- Start Button -->
-    <button onclick="showWorkout()" class="bg-[#29292b] text-white px-10 py-6 rounded-[40px] text-2xl font-medium transition-transform active:scale-95">
+    <button onclick="showWorkout()" class="bg-[#29292b] text-white px-12 py-6 rounded-[35px] active:scale-95 transition-transform">
         Start!
     </button>
 </div>
