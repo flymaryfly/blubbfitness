@@ -2,164 +2,151 @@
 <html lang="en">
   <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;900&display=swap" rel="stylesheet">
     
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Blubb Fitness</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://use.typekit.net/lkm0rfm.css" />
     <meta name="theme-color" content="#D9DEEB">
 
     <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100dvh;
+        width: 100%;
+        overscroll-behavior: none;
+        overflow: hidden;
+        user-select: none;
+        background: linear-gradient(180deg, #D9DEEB 0%, #EC9B91 100%) !important;
+        background-attachment: fixed !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #29292b;
+        -webkit-font-smoothing: antialiased;
+      }
 
-html, body {
-    margin: 0;
-    padding: 0;
-    /* Changed height to 100dvh (Dynamic Viewport Height) */
-    height: 100dvh; 
-    width: 100%;
-    
-    /* This stops the "pull-down" bounce effect */
-    overscroll-behavior: none; 
-    
-    /* Changed to hidden so the base page never scrolls */
-    overflow: hidden; 
-  user-select: none;
+      #welcome-screen.screen-active {
+        display: flex;
+        background: transparent !important;
+      }
 
-    background: linear-gradient(180deg, #D9DEEB 0%, #EC9B91 100%) !important;
-    background-attachment: fixed !important;
-    
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: #29292b;
-    -webkit-font-smoothing: antialiased;
-}
-      
-#welcome-screen.screen-active {
-    display: flex;
-    background: transparent !important;
-}
-/* "Blubb" Logo */
-#welcome-screen h1 {
-    font-weight: 900; 
-    font-size: 120px;
-    line-height: 0.85;
-    letter-spacing: -0.07em; 
-    margin-left: -8px; 
-    margin-top: 0; /* Forces the margin to zero */
-}
+      #welcome-screen h1 {
+        font-weight: 900;
+        font-size: 120px;
+        line-height: 0.85;
+        letter-spacing: -0.07em;
+        margin-left: -8px;
+        margin-top: 0;
+      }
 
-/* The Tagline */
-#welcome-screen p {
-    font-weight: 200; /* Adjusted for that thin system look */
-    font-size: 2.4rem;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-}
+      #welcome-screen p {
+        font-weight: 200;
+        font-size: 2.4rem;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+      }
 
-/* Start Button */
-#welcome-screen button {
-    font-weight: 800;
-    font-size: 2rem;
-    letter-spacing: -0.02em;
-    align-self: flex-start; 
-}
+      #welcome-screen button {
+        font-weight: 800;
+        font-size: 2rem;
+        letter-spacing: -0.02em;
+        align-self: flex-start;
+      }
 
-    .bg-panda-pink { background-color: #d76972; }
-    .bg-panda-grey { background-color: #dbdee9; }
-    .text-panda-charcoal { color: #29292b; }
+      .bg-panda-pink { background-color: #d76972; }
+      .bg-panda-grey { background-color: #dbdee9; }
+      .text-panda-charcoal { color: #29292b; }
 
-    .screen {
+      .screen {
         display: none;
-        min-height: 100vh;
+        min-height: 100dvh;
         width: 100vw;
         position: absolute;
         top: 0;
         left: 0;
-    }
-    .screen-active { display: block; }
+      }
 
-   .workout-card {
-    transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
-    margin-bottom: -150px; 
-    cursor: pointer;
-    position: relative;
-    border-radius: 50px; 
-    background-color: #ffffff; /* Add this! */
-    overflow: hidden;         /* Add this to keep the rounded corners clean */
-    border: 1px solid rgba(0,0,0,0.05);
-}
-    .workout-card.expanded {
+      /* FIX: welcome screen uses flex, dashboard uses flex, others use block */
+      #screen-dashboard.screen-active {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+      }
+
+      #screen-workout.screen-active,
+      #screen-exercise-selection.screen-active,
+      #screen-logger.screen-active {
+        display: block;
+        overflow-y: auto;
+      }
+
+      .screen-active { display: block; }
+
+      .workout-card {
+        transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+        margin-bottom: -150px;
+        cursor: pointer;
+        position: relative;
+        border-radius: 50px;
+        background-color: #ffffff;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.05);
+      }
+
+      .workout-card.expanded {
         margin-bottom: 20px;
         margin-top: 10px;
         transform: scale(1.02);
-        z-index: 1000 !important; /* Jump to the very front when clicked */
+        z-index: 1000 !important;
         box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         background-color: #ffffff !important;
-    }
-      
-    input, textarea {
+      }
+
+      input, textarea {
         background: transparent;
         border: none;
         outline: none;
         color: inherit;
-    }
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
+      }
+
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
-    }
+      }
     </style>
   </head>
- <body class="antialiased">
-   <!-- Welcome Screen -->
-   <!-- Removed 'fixed' so it stays within the flow of the body gradient -->
-<div id="welcome-screen" class="screen-active screen flex flex-col items-start px-12 pt-[35vh] h-full bg-transparent">
+  <body class="antialiased">
 
-       <h1 class="mb-4">Blubb</h1> 
-       
-       <p class="mb-20">
-           the fitness app<br>
-           for pandas<br>
-           by pandas
-       </p>
-
-       <button onclick="startNewWorkout()" class="bg-[#29292b] text-white px-14 py-7 rounded-[45px] active:scale-95 transition-transform">
-           Start!
-       </button>
-   </div>
+    <!-- 1. WELCOME SCREEN -->
+    <div id="welcome-screen" class="screen-active screen flex flex-col items-start px-12 pt-[35vh] h-full bg-transparent">
+      <h1 class="mb-4">Blubb</h1>
+      <p class="mb-20">
+        the fitness app<br>
+        for pandas<br>
+        by pandas
+      </p>
+      <!-- FIX: goes to dashboard, not straight to workout -->
+      <button onclick="nav('dashboard')" class="bg-[#29292b] text-white px-14 py-7 rounded-[45px] active:scale-95 transition-transform">
+        Start!
+      </button>
+    </div>
 
     <!-- 2. MAIN DASHBOARD -->
-    <div id="screen-dashboard" class="screen bg-[#1a1a1b]">
-      <div
-        class="bg-gradient-to-b from-[#e8a3a9] to-[#d76972] pt-16 pb-20 px-8 rounded-b-[50px] relative shadow-2xl"
-      >
+    <!-- FIX: added flex flex-col so children lay out correctly -->
+    <div id="screen-dashboard" class="screen bg-[#1a1a1b] flex flex-col">
+      <div class="bg-gradient-to-b from-[#e8a3a9] to-[#d76972] pt-16 pb-20 px-8 rounded-b-[50px] relative shadow-2xl flex-shrink-0">
         <div class="flex justify-between items-start">
           <div>
-            <h1 class="text-5xl font-thin tracking-tight text-[#29292b]">
-              hi panda!
-            </h1>
-            <p
-              class="text-xl font-thin text-[#29292b] opacity-70 mt-1 lowercase"
-            >
-              panda is strong.
-            </p>
+            <h1 class="text-5xl font-thin tracking-tight text-[#29292b]">hi panda!</h1>
+            <p class="text-xl font-thin text-[#29292b] opacity-70 mt-1 lowercase">panda is strong.</p>
           </div>
-          <div
-            class="bg-[#29292b] text-panda-pink p-4 rounded-3xl text-center min-w-[90px]"
-          >
-            <span id="dash-day" class="block text-4xl font-bold leading-none"
-              >--</span
-            >
-            <span
-              id="dash-month"
-              class="block text-lg uppercase tracking-widest font-light mt-1"
-              >---</span
-            >
+          <div class="bg-[#29292b] text-panda-pink p-4 rounded-3xl text-center min-w-[90px]">
+            <span id="dash-day" class="block text-4xl font-bold leading-none">--</span>
+            <span id="dash-month" class="block text-lg uppercase tracking-widest font-light mt-1">---</span>
           </div>
         </div>
         <div class="absolute -bottom-10 left-1/2 -translate-x-1/2">
@@ -167,88 +154,51 @@ html, body {
             <button
               onclick="startNewWorkout()"
               class="bg-panda-pink text-white w-20 h-20 rounded-full flex items-center justify-center text-5xl font-thin shadow-xl active:scale-90 transition-transform"
-            >
-              +
-            </button>
+            >+</button>
           </div>
         </div>
       </div>
 
-      <div class="mt-20 px-6 pb-32">
-        <h2 class="text-white text-3xl font-thin mb-8 opacity-40 lowercase">
-          past workouts
-        </h2>
+      <div class="mt-20 px-6 pb-32 flex-1">
+        <h2 class="text-white text-3xl font-thin mb-8 opacity-40 lowercase">past workouts</h2>
         <div id="past-workouts-container" class="flex flex-col"></div>
       </div>
     </div>
 
     <!-- 3. WORKOUT SESSION SCREEN -->
     <div id="screen-workout" class="screen bg-[#1a1a1b] p-6">
-      <div
-        class="bg-panda-grey rounded-[40px] p-8 text-panda-charcoal mb-8 mt-10"
-      >
-        <input
-          type="text"
-          id="workout-date-input"
-          class="text-3xl font-bold mb-1 block w-full"
-          value="01 November"
-        />
-        <input
-          type="text"
-          id="workout-title-input"
-          class="text-xl font-thin w-full opacity-60"
-          value="pattern A"
-        />
+      <div class="bg-panda-grey rounded-[40px] p-8 text-panda-charcoal mb-8 mt-10">
+        <input type="text" id="workout-date-input" class="text-3xl font-bold mb-1 block w-full" value="01 November" />
+        <input type="text" id="workout-title-input" class="text-xl font-thin w-full opacity-60" value="pattern A" />
       </div>
 
       <div id="current-session-exercises" class="grid grid-cols-2 gap-4 mb-32">
         <!-- JS will inject exercises + the PLUS button here -->
       </div>
 
-      <div
-        class="fixed bottom-10 left-0 w-full px-8 flex justify-between items-center"
-      >
-        <button
-          onclick="nav('dashboard')"
-          class="text-panda-pink text-2xl font-thin"
-        >
-          ← Exit
-        </button>
+      <div class="fixed bottom-10 left-0 w-full px-8 flex justify-between items-center">
+        <button onclick="nav('dashboard')" class="text-panda-pink text-2xl font-thin">← Exit</button>
         <button
           onclick="saveFullWorkout(event)"
           class="bg-panda-pink text-white px-10 py-4 rounded-full text-xl font-bold shadow-xl active:scale-95 transition-transform"
-        >
-          Save!
-        </button>
+        >Save!</button>
       </div>
     </div>
 
     <!-- 4. EXERCISE SELECTION GRID -->
-<div id="screen-exercise-selection" class="screen bg-panda-pink p-8">
-  <button onclick="nav('workout')" class="text-white text-xl font-thin mb-10 block">← Cancel</button>
-  
-  <!-- This container will now be dynamic -->
-  <div id="exercise-library-grid" class="grid grid-cols-2 gap-5">
-    <!-- The "+" button stays, JS will inject the rest -->
-    <div class="bg-[#29292b] aspect-square rounded-[40px] p-6 flex items-center justify-center">
-      <button onclick="spawnNewExercise()" class="text-white text-6xl font-thin">+</button>
+    <div id="screen-exercise-selection" class="screen bg-panda-pink p-8">
+      <button onclick="nav('workout')" class="text-white text-xl font-thin mb-10 block">← Cancel</button>
+      <div id="exercise-library-grid" class="grid grid-cols-2 gap-5">
+        <div class="bg-[#29292b] aspect-square rounded-[40px] p-6 flex items-center justify-center">
+          <button onclick="spawnNewExercise()" class="text-white text-6xl font-thin">+</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
     <!-- 5. ADD EXERCISE DATA (THE LOGGER) -->
     <div id="screen-logger" class="screen bg-panda-pink p-8 overflow-y-auto">
-      <button
-        onclick="nav('exercise-selection')"
-        class="text-white text-xl font-thin mb-6 block"
-      >
-        ← Cancel
-      </button>
-      <input
-        type="text"
-        id="log-ex-name"
-        class="text-5xl font-black tracking-tighter text-[#29292b] mb-2 w-full lowercase"
-      />
+      <button onclick="nav('exercise-selection')" class="text-white text-xl font-thin mb-6 block">← Cancel</button>
+      <input type="text" id="log-ex-name" class="text-5xl font-black tracking-tighter text-[#29292b] mb-2 w-full lowercase" />
       <textarea
         id="log-notes"
         class="w-full h-24 font-thin text-xl text-[#29292b] opacity-60 mb-8 lowercase placeholder-[#29292b]"
@@ -256,142 +206,58 @@ html, body {
       ></textarea>
 
       <div class="space-y-4 pb-32">
-        <!-- Stat Rows -->
-        <div
-          class="flex justify-between items-center bg-panda-grey/30 p-4 rounded-3xl"
-        >
+        <div class="flex justify-between items-center bg-panda-grey/30 p-4 rounded-3xl">
           <div class="flex items-baseline gap-2">
-            <input
-              type="number"
-              id="val-sets"
-              value="0"
-              class="text-5xl font-bold w-16 text-center"
-            />
+            <input type="number" id="val-sets" value="0" class="text-5xl font-bold w-16 text-center" />
             <span class="text-xl font-thin opacity-60">Sets</span>
           </div>
           <div class="flex gap-3">
-            <button
-              onclick="step('sets', -1)"
-              class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]"
-            >
-              -
-            </button>
-            <button
-              onclick="step('sets', 1)"
-              class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]"
-            >
-              +
-            </button>
+            <button onclick="step('sets', -1)" class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]">-</button>
+            <button onclick="step('sets', 1)" class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]">+</button>
           </div>
         </div>
 
-        <div
-          class="flex justify-between items-center bg-panda-grey/30 p-4 rounded-3xl"
-        >
+        <div class="flex justify-between items-center bg-panda-grey/30 p-4 rounded-3xl">
           <div class="flex items-baseline gap-2">
-            <input
-              type="number"
-              id="val-reps"
-              value="0"
-              class="text-5xl font-bold w-16 text-center"
-            />
+            <input type="number" id="val-reps" value="0" class="text-5xl font-bold w-16 text-center" />
             <span class="text-xl font-thin opacity-60">Reps</span>
           </div>
           <div class="flex gap-3">
-            <button
-              onclick="step('reps', -1)"
-              class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]"
-            >
-              -
-            </button>
-            <button
-              onclick="step('reps', 1)"
-              class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]"
-            >
-              +
-            </button>
+            <button onclick="step('reps', -1)" class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]">-</button>
+            <button onclick="step('reps', 1)" class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]">+</button>
           </div>
         </div>
 
-        <div
-          class="flex justify-between items-center bg-panda-grey/30 p-4 rounded-3xl"
-        >
+        <div class="flex justify-between items-center bg-panda-grey/30 p-4 rounded-3xl">
           <div class="flex items-baseline gap-2">
-            <input
-              type="number"
-              id="val-rir"
-              value="0"
-              class="text-5xl font-bold w-24 text-center"
-            />
-            <span class="text-xl font-thin opacity-60">rir</span>
+            <input type="number" id="val-rir" value="0" class="text-5xl font-bold w-24 text-center" />
+            <span class="text-xl font-thin opacity-60">RIR</span>
           </div>
           <div class="flex gap-3">
-            <button
-              onclick="step('rir', -1)"
-              class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]"
-            >
-              -
-            </button>
-            <button
-              onclick="step('rir', 1)"
-              class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]"
-            >
-              +
-            </button>
+            <button onclick="step('rir', -1)" class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]">-</button>
+            <button onclick="step('rir', 1)" class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]">+</button>
           </div>
         </div>
-        <div
-          class="flex justify-between items-center bg-panda-grey/30 p-4 rounded-3xl"
-        >
+
+        <div class="flex justify-between items-center bg-panda-grey/30 p-4 rounded-3xl">
           <div class="flex items-baseline gap-2">
-            <input
-              type="number"
-              id="val-weight"
-              value="0"
-              class="text-5xl font-bold w-24 text-center"
-            />
+            <input type="number" id="val-weight" value="0" class="text-5xl font-bold w-24 text-center" />
             <span class="text-xl font-thin opacity-60">Weight</span>
           </div>
           <div class="flex gap-3">
-            <button
-              onclick="step('weight', -2.5)"
-              class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]"
-            >
-              -
-            </button>
-            <button
-              onclick="step('weight', 2.5)"
-              class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]"
-            >
-              +
-            </button>
+            <button onclick="step('weight', -2.5)" class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]">-</button>
+            <button onclick="step('weight', 2.5)" class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]">+</button>
           </div>
         </div>
-        <div
-          class="flex justify-between items-center bg-panda-grey/30 p-4 rounded-3xl"
-        >
+
+        <div class="flex justify-between items-center bg-panda-grey/30 p-4 rounded-3xl">
           <div class="flex items-baseline gap-2">
-            <input
-              type="number"
-              id="val-time"
-              value="0"
-              class="text-5xl font-bold w-24 text-center"
-            />
+            <input type="number" id="val-time" value="0" class="text-5xl font-bold w-24 text-center" />
             <span class="text-xl font-thin opacity-60">mins</span>
           </div>
           <div class="flex gap-3">
-            <button
-              onclick="step('time', -5)"
-              class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]"
-            >
-              -
-            </button>
-            <button
-              onclick="step('time', 5)"
-              class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]"
-            >
-              +
-            </button>
+            <button onclick="step('time', -5)" class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]">-</button>
+            <button onclick="step('time', 5)" class="w-12 h-12 rounded-full border border-[#29292b] text-3xl font-thin text-[#29292b]">+</button>
           </div>
         </div>
       </div>
@@ -400,144 +266,142 @@ html, body {
         <button
           onclick="addExerciseToSession()"
           class="w-full bg-[#29292b] text-white py-6 rounded-full text-2xl font-bold shadow-2xl active:scale-95 transition-transform"
-        >
-          Save!
-        </button>
+        >Save!</button>
       </div>
     </div>
 
-<script>
-    let exerciseLibrary = ['bench press', 'lat pulldown'];
-    let history = [];
-    let currentSession = null;
-    let editingExerciseIndex = null;
-    let editingHistoryIndex = null; // Track if we are editing an old workout
+    <script>
+      let exerciseLibrary = ['bench press', 'lat pulldown'];
+      let history = [];
+      let currentSession = null;
+      let editingExerciseIndex = null;
+      let editingHistoryIndex = null;
 
-    const SCRIPT_URL = "YOUR_DEPLOYED_URL_HERE"; 
+      const SCRIPT_URL = "YOUR_DEPLOYED_URL_HERE";
 
-    function nav(screenId) {
+      // FIX: nav() now calls updateDates() + renderHistory() when going to dashboard
+      function nav(screenId) {
         document.querySelectorAll(".screen").forEach((s) => s.classList.remove("screen-active"));
         document.getElementById("screen-" + screenId).classList.add("screen-active");
         window.scrollTo(0, 0);
-    }
+        if (screenId === 'dashboard') {
+          updateDates();
+          renderHistory();
+        }
+      }
 
-    function updateDates() {
+      function updateDates() {
         const now = new Date();
-        const months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+        const months = ["january","february","march","april","may","june","july","august","september","october","november","december"];
         document.getElementById("dash-day").innerText = now.getDate();
         document.getElementById("dash-month").innerText = months[now.getMonth()].substring(0, 3);
         const dateStr = `${now.getDate()} ${months[now.getMonth()]}`;
         document.getElementById("workout-date-input").value = dateStr;
-    }
+      }
 
-    function startNewWorkout() {
-        editingHistoryIndex = null; // Fresh workout
+      function startNewWorkout() {
+        editingHistoryIndex = null;
         currentSession = {
-            date: document.getElementById("workout-date-input").value,
-            title: "pattern A",
-            exercises: [],
+          date: document.getElementById("workout-date-input").value,
+          title: "pattern A",
+          exercises: [],
         };
         document.getElementById("workout-title-input").value = "pattern A";
         renderSession();
         nav("workout");
-    }
+      }
 
-    // Function to load a past workout back into the editor
-    function editPastWorkout(index) {
+      function editPastWorkout(index) {
         editingHistoryIndex = index;
-        currentSession = JSON.parse(JSON.stringify(history[index])); // Deep copy
-        
+        currentSession = JSON.parse(JSON.stringify(history[index]));
         document.getElementById("workout-date-input").value = currentSession.date;
         document.getElementById("workout-title-input").value = currentSession.title;
-        
         renderSession();
         nav("workout");
-    }
+      }
 
-    function spawnNewExercise() {
+      function spawnNewExercise() {
         const name = prompt("Enter new exercise name:", "cardio");
         if (name && name.trim() !== "") {
-            const lowerName = name.toLowerCase();
-            if (!exerciseLibrary.includes(lowerName)) {
-                exerciseLibrary.push(lowerName);
-                localStorage.setItem('blubb_library', JSON.stringify(exerciseLibrary));
-                renderLibrary();
-            }
-            openLogger(lowerName);
+          const lowerName = name.toLowerCase();
+          if (!exerciseLibrary.includes(lowerName)) {
+            exerciseLibrary.push(lowerName);
+            localStorage.setItem('blubb_library', JSON.stringify(exerciseLibrary));
+            renderLibrary();
+          }
+          openLogger(lowerName);
         }
-    }
+      }
 
-    function openLogger(name, index = null) {
+      function openLogger(name, index = null) {
         editingExerciseIndex = index;
         if (index !== null) {
-            const ex = currentSession.exercises[index];
-            document.getElementById("log-ex-name").value = ex.name;
-            document.getElementById("log-notes").value = ex.notes || "";
-            document.getElementById("val-sets").value = ex.sets;
-            document.getElementById("val-reps").value = ex.reps;
-            document.getElementById("val-rir").value = ex.rir || 0;
-            document.getElementById("val-weight").value = ex.weight;
-            document.getElementById("val-time").value = ex.time || 0;
+          const ex = currentSession.exercises[index];
+          document.getElementById("log-ex-name").value = ex.name;
+          document.getElementById("log-notes").value = ex.notes || "";
+          document.getElementById("val-sets").value = ex.sets;
+          document.getElementById("val-reps").value = ex.reps;
+          document.getElementById("val-rir").value = ex.rir || 0;
+          document.getElementById("val-weight").value = ex.weight;
+          document.getElementById("val-time").value = ex.time || 0;
         } else {
-            document.getElementById("log-ex-name").value = name;
-            document.getElementById("log-notes").value = "";
-            document.getElementById("val-sets").value = 0;
-            document.getElementById("val-reps").value = 0;
-            document.getElementById("val-rir").value = 0;
-            document.getElementById("val-weight").value = 0;
-            document.getElementById("val-time").value = 0;
+          document.getElementById("log-ex-name").value = name;
+          document.getElementById("log-notes").value = "";
+          document.getElementById("val-sets").value = 0;
+          document.getElementById("val-reps").value = 0;
+          document.getElementById("val-rir").value = 0;
+          document.getElementById("val-weight").value = 0;
+          document.getElementById("val-time").value = 0;
         }
         nav("logger");
-    }
+      }
 
-    function step(id, amt) {
+      function step(id, amt) {
         const el = document.getElementById("val-" + id);
         let val = parseFloat(el.value) + amt;
         el.value = val < 0 ? 0 : val.toFixed(1).replace(/\.0$/, '');
-    }
+      }
 
-    function addExerciseToSession() {
+      function addExerciseToSession() {
         const exData = {
-            name: document.getElementById("log-ex-name").value,
-            notes: document.getElementById("log-notes").value,
-            sets: document.getElementById("val-sets").value,
-            reps: document.getElementById("val-reps").value,
-            rir: document.getElementById("val-rir").value,
-            weight: document.getElementById("val-weight").value,
-            time: document.getElementById("val-time").value
+          name: document.getElementById("log-ex-name").value,
+          notes: document.getElementById("log-notes").value,
+          sets: document.getElementById("val-sets").value,
+          reps: document.getElementById("val-reps").value,
+          rir: document.getElementById("val-rir").value,
+          weight: document.getElementById("val-weight").value,
+          time: document.getElementById("val-time").value,
         };
-
         if (editingExerciseIndex !== null) {
-            currentSession.exercises[editingExerciseIndex] = exData;
+          currentSession.exercises[editingExerciseIndex] = exData;
         } else {
-            currentSession.exercises.push(exData);
+          currentSession.exercises.push(exData);
         }
         renderSession();
         nav("workout");
-    }
+      }
 
-    function renderSession() {
+      function renderSession() {
         const container = document.getElementById("current-session-exercises");
         container.innerHTML = "";
         currentSession.exercises.forEach((ex, index) => {
-            const div = document.createElement("div");
-            div.className = "bg-panda-pink aspect-square rounded-[30px] p-5 text-panda-charcoal flex flex-col justify-between active:scale-95 transition-transform cursor-pointer shadow-md";
-            div.onclick = () => openLogger(ex.name, index);
-            div.innerHTML = `
-                <span class="text-xl font-bold leading-tight lowercase">${ex.name}</span>
-                <div class="flex flex-wrap gap-2 text-[10px] font-bold uppercase opacity-80">
-                    <span>${ex.sets}s / ${ex.reps}r / ${ex.weight}kg</span>
-                </div>
-            `;
-            container.appendChild(div);
+          const div = document.createElement("div");
+          div.className = "bg-panda-pink aspect-square rounded-[30px] p-5 text-panda-charcoal flex flex-col justify-between active:scale-95 transition-transform cursor-pointer shadow-md";
+          div.onclick = () => openLogger(ex.name, index);
+          div.innerHTML = `
+            <span class="text-xl font-bold leading-tight lowercase">${ex.name}</span>
+            <div class="flex flex-wrap gap-2 text-[10px] font-bold uppercase opacity-80">
+              <span>${ex.sets}s / ${ex.reps}r / ${ex.weight}kg</span>
+            </div>`;
+          container.appendChild(div);
         });
         const addBtn = document.createElement("div");
         addBtn.className = "border-2 border-dashed border-panda-pink/30 aspect-square rounded-[30px] flex items-center justify-center";
         addBtn.innerHTML = `<button onclick="nav('exercise-selection')" class="bg-panda-pink text-white w-16 h-16 rounded-full text-4xl font-thin shadow-lg">+</button>`;
         container.appendChild(addBtn);
-    }
+      }
 
-    async function saveFullWorkout(e) {
+      async function saveFullWorkout(e) {
         const btn = e.target;
         currentSession.date = document.getElementById("workout-date-input").value;
         currentSession.title = document.getElementById("workout-title-input").value;
@@ -548,117 +412,103 @@ html, body {
         btn.disabled = true;
 
         try {
-            await fetch(SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(currentSession)
-            });
+          await fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(currentSession),
+          });
 
-            if (editingHistoryIndex !== null) {
-                history[editingHistoryIndex] = { ...currentSession };
-            } else {
-                history.unshift({ ...currentSession });
-            }
-            
-            localStorage.setItem('blubb_history', JSON.stringify(history));
+          if (editingHistoryIndex !== null) {
+            history[editingHistoryIndex] = { ...currentSession };
+          } else {
+            history.unshift({ ...currentSession });
+          }
 
-            renderHistory();
-            btn.innerText = "Saved! 🐼";
-            setTimeout(() => {
-                btn.innerText = "Save!";
-                btn.disabled = false;
-                nav("dashboard");
-            }, 1000);
-
-        } catch (error) {
-            alert("Error saving!");
-            btn.innerText = "Error!";
+          localStorage.setItem('blubb_history', JSON.stringify(history));
+          renderHistory();
+          btn.innerText = "Saved! 🐼";
+          setTimeout(() => {
+            btn.innerText = "Save!";
             btn.disabled = false;
+            nav("dashboard");
+          }, 1000);
+        } catch (error) {
+          alert("Error saving!");
+          btn.innerText = "Error!";
+          btn.disabled = false;
         }
-    }
+      }
 
-  function renderHistory() {
-    const container = document.getElementById("past-workouts-container");
-    container.innerHTML = "";
-    
-    if (history.length === 0) return;
-
-    history.forEach((workout, index) => {
-        const card = document.createElement("div");
-        
-        // Fix: Newer workouts (lower index) get HIGHER z-index
-        card.style.zIndex = history.length - index; 
-        
-        card.className = "workout-card text-panda-charcoal p-10 shadow-2xl";
-        
-        let exHtml = workout.exercises.map(ex => `
+      function renderHistory() {
+        const container = document.getElementById("past-workouts-container");
+        container.innerHTML = "";
+        if (history.length === 0) return;
+        history.forEach((workout, index) => {
+          const card = document.createElement("div");
+          card.style.zIndex = history.length - index;
+          card.className = "workout-card text-panda-charcoal p-10 shadow-2xl";
+          let exHtml = workout.exercises.map(ex => `
             <div class="flex justify-between py-3 border-b border-black/5 text-sm lowercase">
-                <span class="font-thin">${ex.name}</span>
-                <span class="font-bold">${ex.sets}s / ${ex.reps}r / ${ex.weight}kg</span>
+              <span class="font-thin">${ex.name}</span>
+              <span class="font-bold">${ex.sets}s / ${ex.reps}r / ${ex.weight}kg</span>
             </div>`).join("");
-
-        card.innerHTML = `
+          card.innerHTML = `
             <span class="text-lg opacity-40 font-thin lowercase">${workout.date}</span>
             <h3 class="text-4xl font-black uppercase tracking-tighter mb-2">${workout.title}</h3>
             <div class="exercise-summary hidden mt-6 space-y-1">
-                ${exHtml}
-                <button onclick="editPastWorkout(${index})" class="w-full mt-8 bg-[#29292b] text-white py-5 rounded-full font-bold uppercase text-xs tracking-[0.2em] active:scale-95 transition-transform">Edit Workout</button>
+              ${exHtml}
+              <button onclick="editPastWorkout(${index})" class="w-full mt-8 bg-[#29292b] text-white py-5 rounded-full font-bold uppercase text-xs tracking-[0.2em] active:scale-95 transition-transform">Edit Workout</button>
             </div>`;
-        
-        card.onclick = (e) => {
+          card.onclick = (e) => {
             if (e.target.tagName === 'BUTTON') return;
-            
             const isExpanded = card.classList.contains("expanded");
-            
             document.querySelectorAll(".workout-card").forEach((c, idx) => {
-                c.classList.remove("expanded");
-                c.querySelector(".exercise-summary").classList.add("hidden");
-                // Reset to original stacking order
-                c.style.zIndex = history.length - idx; 
+              c.classList.remove("expanded");
+              c.querySelector(".exercise-summary").classList.add("hidden");
+              c.style.zIndex = history.length - idx;
             });
-
             if (!isExpanded) {
-                card.classList.add("expanded");
-                card.querySelector(".exercise-summary").classList.remove("hidden");
-                card.style.zIndex = 1000; 
+              card.classList.add("expanded");
+              card.querySelector(".exercise-summary").classList.remove("hidden");
+              card.style.zIndex = 1000;
             }
-        };
-        container.appendChild(card);
-    });
-}
-  
-    function renderLibrary() {
+          };
+          container.appendChild(card);
+        });
+      }
+
+      function renderLibrary() {
         const grid = document.getElementById("exercise-library-grid");
-        const plusButton = grid.querySelector('div'); // Get the + button container
+        const plusButton = grid.querySelector('div');
         grid.innerHTML = "";
         grid.appendChild(plusButton);
-
         exerciseLibrary.forEach(exName => {
-            const btn = document.createElement("button");
-            btn.onclick = () => openLogger(exName);
-            btn.className = "bg-[#29292b] aspect-square rounded-[40px] p-6 text-left flex flex-col justify-end active:scale-95 transition-transform";
-            const formattedName = exName.replace(" ", "<br />");
-            btn.innerHTML = `<span class="text-white text-2xl font-thin leading-tight lowercase">${formattedName}</span>`;
-            grid.appendChild(btn);
+          const btn = document.createElement("button");
+          btn.onclick = () => openLogger(exName);
+          btn.className = "bg-[#29292b] aspect-square rounded-[40px] p-6 text-left flex flex-col justify-end active:scale-95 transition-transform";
+          const formattedName = exName.replace(" ", "<br />");
+          btn.innerHTML = `<span class="text-white text-2xl font-thin leading-tight lowercase">${formattedName}</span>`;
+          grid.appendChild(btn);
         });
-    }
+      }
 
-    function init() {
+      function init() {
         updateDates();
         const savedHistory = localStorage.getItem('blubb_history');
         if (savedHistory) {
-            history = JSON.parse(savedHistory);
-            renderHistory();
+          history = JSON.parse(savedHistory);
         }
         const savedLibrary = localStorage.getItem('blubb_library');
         if (savedLibrary) {
-            exerciseLibrary = JSON.parse(savedLibrary);
+          exerciseLibrary = JSON.parse(savedLibrary);
         }
         renderLibrary();
-    }
+        // FIX: render history on init so dashboard is ready when user navigates to it
+        renderHistory();
+      }
 
-    init();
-</script>
+      init();
+    </script>
   </body>
 </html>
