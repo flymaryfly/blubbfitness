@@ -13,6 +13,9 @@
     <meta name="theme-color" content="#D9DEEB">
 
     <style>
+      html {
+    background: #D9DEEB;
+}
       html, body {
         margin: 0;
         padding: 0;
@@ -59,14 +62,14 @@
       .bg-panda-grey { background-color: #dbdee9; }
       .text-panda-charcoal { color: #29292b; }
 
-      .screen {
-        display: none;
-        min-height: 100dvh;
-        width: 100vw;
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
+  .screen {
+    display: none;
+    min-height: 100dvh;
+    width: 100vw;
+    position: fixed; /* changed from absolute */
+    top: 0;
+    left: 0;
+}
 
       /* FIX: welcome screen uses flex, dashboard uses flex, others use block */
       #screen-dashboard.screen-active {
